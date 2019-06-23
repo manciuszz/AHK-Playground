@@ -1,4 +1,4 @@
-#include AHKsock.ahk
+#include %A_ScriptDir%\lib\AHKsock.ahk
 
 class Uri
 {

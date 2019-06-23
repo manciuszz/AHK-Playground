@@ -90,7 +90,7 @@ builtInFunctions() {
 
 ExecScript(Script, Wait := true) {
     shell := ComObjCreate("WScript.Shell")
-    exec := shell.Exec("AutoHotkey.exe /ErrorStdOut *")
+    exec := shell.Exec(A_AhkPath . " /ErrorStdOut *")
     exec.StdIn.Write(script)
     exec.StdIn.Close()
     if Wait
