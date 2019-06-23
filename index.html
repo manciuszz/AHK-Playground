@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang='en'>
+	<head>
+		<meta charset='utf-8'>
+		<title>{{title}}</title>
+		
+		<script src='//unpkg.com/codemirror@5.23.0/lib/codemirror.js'></script>
+		<script src='//unpkg.com/codemirror@5.23.0/mode/javascript/javascript.js'></script>
+		<script src='//unpkg.com/codemirror@5.23.0/addon/display/placeholder.js'></script>
+		<link rel='stylesheet' href='//unpkg.com/codemirror@5.23.0/lib/codemirror.css'>
+		<link rel='stylesheet' href='/css?path=/styles.css' />
+	</head>
+	<body>
+		<h2>{{title}}</h2>
+		<div class='row'>
+		  <div class='column left'>
+			<h2 class='center'>Input</h2>
+			<textarea id='input' placeholder='MsgBox, Hello World'></textarea>
+		  </div>
+		  <div class='column right'>
+			<h2 class='center'>Output</h2>
+			<p id='output' data-placeholder='Autohotkey Output goes here...'></p>
+		  </div>
+		</div>
+		<div class='center btn'>
+			<button id='runScript' type='submit' onClick='handleClick();'>Run</button>
+		</div>
+	</body>
+	<script>
+		var editor = document.getElementById('input');
+		var edit = CodeMirror.fromTextArea(editor, {
+			lineNumbers: true,
+			mode: 'javascript'
+		});
+	</script>
+	<script src='/javascript?path=/main.js'></script>
+</html>

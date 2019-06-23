@@ -1,0 +1,48 @@
+#output {
+	white-space: pre;
+}
+
+.center {
+	margin: 0;
+	padding: 15px;
+	text-align: center;
+	border-bottom: 1px solid black;
+}
+
+.btn {
+	padding: 15px 47% 15px 47%;
+}
+
+.row {
+	display: flex;
+}
+
+.column {
+	flex: 50%;
+}
+
+.left {
+	width: 75%;
+	background-color: #aaa;
+}
+
+.right {
+	width: 25%;
+	background-color:#bbb;
+}
+
+p:empty:not(:focus)::before {
+	content: attr(data-placeholder);
+}
+
+.CodeMirror {
+	border: 1px solid silver;
+}
+
+.CodeMirror-empty.CodeMirror-focused {
+	outline: none;
+}
+
+.CodeMirror pre.CodeMirror-placeholder {
+	color: #999;
+}
