@@ -38,7 +38,7 @@ javascript(ByRef req, ByRef res) {
 }
 
 @paths["/css"] := Func("css")
-css(ByRef req, ByRef res, server) {
+css(ByRef req, ByRef res) {
 	if (!req.queries.path)
 		return notFound(req, res)
 	
@@ -72,7 +72,7 @@ _FileRead(path) {
 }
 
 @cache := {}
-cache(key, value, shouldCache := true) {
+cache(key, value, shouldCache := false) {
 	global @cache
 			
 	if (IsObject(value))
