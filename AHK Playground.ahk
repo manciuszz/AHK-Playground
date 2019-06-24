@@ -69,7 +69,10 @@ compiler(ByRef req, ByRef res) {
 mountHTML(pos := 1) {
 	elementsToBind := {}
 	elementsToBind.title := "AHK Playground"
-	elementsToBind.inputPlaceholder := "MsgBox, Hello World`nprint(""Hello World"")"
+	elementsToBind.inputPlaceholder := ""
+	. ""   "#JustCompile `t`t`; Make the compiler not wait for Std output."
+	. "`n" "MsgBox, Hello World `t`; Output ""Hello World"" inside a message box"
+	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window"
 	elementsToBind.outputPlaceholder := " ... "
 	
 	FileRead, HTML, % A_ScriptDir . "/index.html"
@@ -108,8 +111,9 @@ execScript(Script, Wait := true) {
 }
 
 runCode(injectedCode) {	
+	injectedCode := StrReplace(injectedCode, "#JustCompile", "", justCompile, 1) ; Creating a directive '#JustCompile' to make the compiler not wait for response.
 	; injectedCode := StrReplace(injectedCode, "//", " `;") ; Allow JavaScript style comments
-	
+
 	builtInFuncs := builtInFunctions()
     runnableScript =
     (LTrim Join`n
@@ -132,8 +136,8 @@ runCode(injectedCode) {
 			%injectedCode%
 		;}
     )
-
-    output := execScript(runnableScript)
+	
+    output := execScript(runnableScript, !justCompile)
 	; if (!output)
 		; output := ExecScript("FileAppend % (" . injectedCode . "), *")
 	return output
