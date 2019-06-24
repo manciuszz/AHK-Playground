@@ -72,7 +72,7 @@ mountHTML(pos := 1) {
 	elementsToBind.inputPlaceholder := ""
 	. ""   "#JustCompile `t`t`; Make the compiler not wait for Std output."
 	. "`n" "MsgBox, Hello World `t`; Output ""Hello World"" inside a message box"
-	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window"
+	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #JustCompile directive"
 	elementsToBind.outputPlaceholder := " ... "
 	
 	FileRead, HTML, % A_ScriptDir . "/index.html"
