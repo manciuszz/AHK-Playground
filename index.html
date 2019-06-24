@@ -4,12 +4,16 @@
 		<meta charset='utf-8'>
 		<title>{{title}}</title>
 		
+		<script defer src='/javascript?path=/main.js'></script>
+		<link rel='stylesheet' href='/css?path=/styles.css' />
+
 		<script src='//unpkg.com/codemirror@5.23.0/lib/codemirror.js'></script>
 		<script src='//unpkg.com/codemirror@5.23.0/mode/javascript/javascript.js'></script>
 		<script src='//unpkg.com/codemirror@5.23.0/addon/display/placeholder.js'></script>
+		<script src='//unpkg.com/codemirror@5.23.0/addon/scroll/simplescrollbars.js'></script>
 		<link rel='stylesheet' href='//unpkg.com/codemirror@5.23.0/lib/codemirror.css'>
 		<link rel='stylesheet' href='//unpkg.com/codemirror@5.48.0/theme/mbo.css'> <!-- More 'Themes' can be found here https://codemirror.net/demo/theme.html -->
-		<link rel='stylesheet' href='/css?path=/styles.css' />
+		<link rel='stylesheet' href='//unpkg.com/codemirror@5.23.0/addon/scroll/simplescrollbars.css'>
 	</head>
 	<body>
 		<h2>{{title}}</h2>
@@ -33,8 +37,8 @@
 			autofocus: true,
 			lineNumbers: true,
 			theme: 'mbo',
-			mode: 'javascript'
+			mode: 'javascript',
+			scrollbarStyle: 'overlay'
 		});
 	</script>
-	<script src='/javascript?path=/main.js'></script>
 </html>

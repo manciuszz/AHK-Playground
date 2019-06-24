@@ -15,7 +15,7 @@ server.Serve(8000)
 ; Run % "http://localhost:8000"
 
 @paths["/"] := Func("mainPage")
-mainPage(ByRef req, ByRef res) {
+mainPage(ByRef req, ByRef res) {	
     html := mountHTML()
     res.SetBodyText(html)
     res.status := 200
@@ -32,7 +32,7 @@ javascript(ByRef req, ByRef res) {
     if (!req.queries.path)
 		return notFound(req, res)
 		
-	FileRead, js, % A_ScriptDir . req.queries.path
+	js := cache(req.queries.path, Func("_FileRead").Bind(A_ScriptDir . req.queries.path))
     res.SetBodyText(js)
     res.status := 200
 }
@@ -40,9 +40,9 @@ javascript(ByRef req, ByRef res) {
 @paths["/css"] := Func("css")
 css(ByRef req, ByRef res, server) {
 	if (!req.queries.path)
-		return notFound(req, res) 
-		
-	FileRead, css, % A_ScriptDir . req.queries.path
+		return notFound(req, res)
+	
+	css := cache(req.queries.path, Func("_FileRead").Bind(A_ScriptDir . req.queries.path))
     res.headers["Content-Type"] := "text/css"
     res.SetBodyText(css)
     res.status := 200
@@ -66,6 +66,28 @@ compiler(ByRef req, ByRef res) {
 	res.status := 200
 }
 
+_FileRead(path) {
+	FileRead, output, % path
+	return output
+}
+
+@cache := {}
+cache(key, value, shouldCache := true) {
+	global @cache
+			
+	if (IsObject(value))
+		if (!shouldCache || !@cache[key])
+			value := value.Call()
+			
+	if (!shouldCache)
+		return value
+	
+	if (!@cache[key])
+		@cache[key] := value
+
+	return @cache[key]
+}
+
 mountHTML(pos := 1) {
 	elementsToBind := {}
 	elementsToBind.title := "AHK Playground"
@@ -75,8 +97,7 @@ mountHTML(pos := 1) {
 	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #JustCompile directive"
 	elementsToBind.outputPlaceholder := " ... "
 	
-	FileRead, HTML, % A_ScriptDir . "/index.html"
-	
+	HTML := _FileRead(A_ScriptDir . "/index.html")
 	while ( pos := RegExMatch(HTML, "O){{(.*)}}", foundMatch, pos + StrLen(foundMatch.1)) ) {
 		bindings := StrSplit(foundMatch.1, "+")
 				
