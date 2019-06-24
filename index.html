@@ -15,15 +15,16 @@
 		<div class='row'>
 		  <div class='column left'>
 			<h2 class='center'>Input</h2>
-			<textarea id='input' placeholder='MsgBox, Hello World'></textarea>
+			<textarea id='input' placeholder='{{inputPlaceholder}}'></textarea>
 		  </div>
 		  <div class='column right'>
 			<h2 class='center'>Output</h2>
-			<p id='output' class='word-wrap' data-placeholder='Autohotkey Output goes here...'></p>
+			<p id='output' class='word-wrap' data-placeholder=' > {{outputPlaceholder}}'></p>
 		  </div>
 		</div>
 		<div class='center btn'>
 			<button id='runScript' type='submit' onClick='handleClick();'>Run</button>
+			<span> or CTRL + ENTER</span>
 		</div>
 	</body>
 	<script>

@@ -6,7 +6,7 @@
 }
 
 .btn {
-	padding: 15px 47% 15px 47%;
+	padding: 15px 0 15px 0;
 }
 
 .row {
@@ -20,6 +20,7 @@
 .left {
 	width: 75%;
 	background-color: #aaa;
+	border-right: 1px solid black;
 }
 
 .right {
@@ -39,12 +40,12 @@ p:empty:not(:focus)::before {
 .CodeMirror {
 	border: 1px solid silver;
     height: auto;
-	min-height: 300px;
+	min-height: fit-content;
 	resize: both;
 	overflow: auto !important;
 	overflow-y: overlay;
 	min-width: -webkit-fill-available;
-	max-width: 75%;
+	max-width: -webkit-fill-available;
 }
 
 .CodeMirror::-webkit-scrollbar { 
@@ -61,4 +62,5 @@ p:empty:not(:focus)::before {
 
 .CodeMirror-scroll {
 	min-height: 300px;
+	max-height: -webkit-fill-available;
 }

@@ -12,6 +12,7 @@ server := new HttpServer()
 server.LoadMimes(A_ScriptDir . "/mime.types")
 server.SetPaths(@paths)
 server.Serve(8000)
+; Run % "http://localhost:8000"
 
 @paths["/"] := Func("mainPage")
 mainPage(ByRef req, ByRef res) {
@@ -68,6 +69,8 @@ compiler(ByRef req, ByRef res) {
 mountHTML(pos := 1) {
 	elementsToBind := {}
 	elementsToBind.title := "AHK Playground"
+	elementsToBind.inputPlaceholder := "MsgBox, Hello World`nprint(""Hello World"")"
+	elementsToBind.outputPlaceholder := " ... "
 	
 	FileRead, HTML, % A_ScriptDir . "/index.html"
 	
