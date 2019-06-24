@@ -32,7 +32,7 @@ javascript(ByRef req, ByRef res) {
     if (!req.queries.path)
 		return notFound(req, res)
 		
-	js := cache(req.queries.path, Func("_FileRead").Bind(A_ScriptDir . req.queries.path))
+	js := cache(req.queries.path, Func("_FileRead").Bind(req.queries.path))
     res.SetBodyText(js)
     res.status := 200
 }
@@ -42,7 +42,7 @@ css(ByRef req, ByRef res) {
 	if (!req.queries.path)
 		return notFound(req, res)
 	
-	css := cache(req.queries.path, Func("_FileRead").Bind(A_ScriptDir . req.queries.path))
+	css := cache(req.queries.path, Func("_FileRead").Bind(req.queries.path))
     res.headers["Content-Type"] := "text/css"
     res.SetBodyText(css)
     res.status := 200
@@ -67,7 +67,7 @@ compiler(ByRef req, ByRef res) {
 }
 
 _FileRead(path) {
-	FileRead, output, % path
+	FileRead, output, % A_ScriptDir . path
 	return output
 }
 
@@ -97,7 +97,7 @@ mountHTML(pos := 1) {
 	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #JustCompile directive"
 	elementsToBind.outputPlaceholder := " ... "
 	
-	HTML := _FileRead(A_ScriptDir . "/index.html")
+	HTML := _FileRead("/index.html")
 	while ( pos := RegExMatch(HTML, "O){{(.*)}}", foundMatch, pos + StrLen(foundMatch.1)) ) {
 		bindings := StrSplit(foundMatch.1, "+")
 				
