@@ -88,7 +88,7 @@ builtInFunctions() {
 	return funcs
 }
 
-ExecScript(Script, Wait := true) {
+execScript(Script, Wait := true) {
     shell := ComObjCreate("WScript.Shell")
     exec := shell.Exec(A_AhkPath . " /ErrorStdOut *")
     exec.StdIn.Write(script)
@@ -123,7 +123,7 @@ runCode(injectedCode) {
 		;}
     )
 
-    output := ExecScript(runnableScript)
+    output := execScript(runnableScript)
 	; if (!output)
 		; output := ExecScript("FileAppend % (" . injectedCode . "), *")
 	return output
