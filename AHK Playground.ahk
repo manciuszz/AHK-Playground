@@ -65,16 +65,23 @@ compiler(ByRef req, ByRef res) {
 	res.status := 200
 }
 
-mountHTML() {
+mountHTML(pos := 1) {
 	elementsToBind := {}
 	elementsToBind.title := "AHK Playground"
 	
 	FileRead, HTML, % A_ScriptDir . "/index.html"
-	RegExMatch(HTML, "O){{(.*)}}", foundMatches)
-	Loop % foundMatches.Count() {
-		HTML := StrReplace(HTML, "{{" . foundMatches[ A_Index ] . "}}", elementsToBind[ foundMatches[ A_Index ] ])
+	
+	while ( pos := RegExMatch(HTML, "O){{(.*)}}", foundMatch, pos + StrLen(foundMatch.1)) ) {
+		bindings := StrSplit(foundMatch.1, "+")
+				
+		content := ""
+		Loop % bindings.MaxIndex() {
+			binding := Trim(bindings[ A_Index ])
+			content .= elementsToBind[ binding ]
+		}
+		HTML := StrReplace(HTML, "{{" . foundMatch.1 . "}}", content)
 	}
-    
+    	
     return HTML
 }
 
