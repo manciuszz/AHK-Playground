@@ -8,6 +8,7 @@
 		<script src='//unpkg.com/codemirror@5.23.0/mode/javascript/javascript.js'></script>
 		<script src='//unpkg.com/codemirror@5.23.0/addon/display/placeholder.js'></script>
 		<link rel='stylesheet' href='//unpkg.com/codemirror@5.23.0/lib/codemirror.css'>
+		<link rel='stylesheet' href='//unpkg.com/codemirror@5.48.0/theme/mbo.css'> <!-- More 'Themes' can be found here https://codemirror.net/demo/theme.html -->
 		<link rel='stylesheet' href='/css?path=/styles.css' />
 	</head>
 	<body>
@@ -30,7 +31,9 @@
 	<script>
 		var editor = document.getElementById('input');
 		var edit = CodeMirror.fromTextArea(editor, {
+			autofocus: true,
 			lineNumbers: true,
+			theme: 'mbo',
 			mode: 'javascript'
 		});
 	</script>

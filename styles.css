@@ -2,11 +2,16 @@
 	margin: 0;
 	padding: 15px;
 	text-align: center;
+}
+
+.column > h2 {
 	border-bottom: 1px solid black;
 }
 
 .btn {
 	padding: 15px 0 15px 0;
+	border: 1px solid black;
+	border-top: 0;
 }
 
 .row {
@@ -33,12 +38,17 @@
 	white-space: pre-wrap;
 }
 
+#output {
+	background-color: whitesmoke;
+    margin: 0;
+}
+
 p:empty:not(:focus)::before {
 	content: attr(data-placeholder);
 }
 
 .CodeMirror {
-	border: 1px solid silver;
+	/* border: 1px solid silver; */
     height: auto;
 	min-height: fit-content;
 	resize: both;
