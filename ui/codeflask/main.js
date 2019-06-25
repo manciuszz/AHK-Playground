@@ -1,5 +1,7 @@
 var handleClick = function() {
-	let input = edit.getValue();
+	if (!flask)
+		return alert("Failed to fetch flask!");
+	let input = flask.getCode();
 	let output = document.getElementById('output');
 	
 	output.textContent = ""; // Clear output logs. TODO: Make it optional in the future...
@@ -13,9 +15,9 @@ var handleClick = function() {
 	.then(data => { output.textContent += data; });
 };
 
-document.addEventListener('keypress', function(evt) {
-	if (!evt) return;
-	if (evt.keyCode === 10) { // CTRL + ENTER
+document.addEventListener('keydown', function(evt) {
+	if (evt.ctrlKey && evt.keyCode === 13) { // CTRL + ENTER
+		evt.preventDefault();
 		handleClick();
 	}
 });

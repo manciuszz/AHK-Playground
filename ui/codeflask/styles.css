@@ -47,31 +47,3 @@
 p:empty:not(:focus)::before {
 	content: attr(data-placeholder);
 }
-
-.CodeMirror {
-	/* border: 1px solid silver; */
-    height: auto;
-	min-height: fit-content;
-	resize: both;
-	overflow: auto !important;
-	overflow-y: overlay;
-	min-width: -webkit-fill-available;
-	max-width: -webkit-fill-available;
-}
-
-.CodeMirror::-webkit-scrollbar { 
-    /* display: none;  */
-}
-
-.CodeMirror-empty.CodeMirror-focused {
-	outline: none;
-}
-
-.CodeMirror pre.CodeMirror-placeholder {
-	color: #999;
-}
-
-.CodeMirror-scroll {
-	min-height: 300px;
-	max-height: -webkit-fill-available;
-}

@@ -1,0 +1,87 @@
+.center {
+	margin: 0;
+	padding: 15px;
+	text-align: center;
+}
+
+.column > h2 {
+	border-bottom: 1px solid black;
+}
+
+.btn {
+	padding: 15px 0 15px 0;
+	border: 1px solid black;
+	border-top: 0;
+}
+
+.row {
+	display: flex;
+}
+
+.column {
+	flex: 50%;
+}
+
+.left {
+	width: 75%;
+	background-color: #aaa;
+	border-right: 1px solid black;
+}
+
+.right {
+	width: 25%;
+	background-color:#bbb;
+}
+
+.word-wrap {
+	word-break: break-word;
+	white-space: pre-wrap;
+}
+
+#output {
+    margin: 0;
+	padding: 5px;
+	background-color: whitesmoke;
+}
+
+p:empty:not(:focus)::before {
+	content: attr(data-placeholder);
+}
+
+.CodeMirror {
+	/* border: 1px solid silver; */
+    height: auto;
+	min-height: fit-content;
+	resize: both;
+	overflow: auto !important;
+	overflow-y: overlay;
+	min-width: -webkit-fill-available;
+	max-width: -webkit-fill-available;
+	max-height: 80vh;
+}
+
+::-webkit-scrollbar {
+	width: 0px;
+	height: 0px;
+}
+
+/* .CodeMirror::-webkit-resizer{ 
+    border : 9px solid rgba(0,0,0,.1);
+    border-bottom-color: rgba(0,0,0,.5);
+    border-right-color: rgba(0,0,0,.5);
+    outline: 1px solid rgba(0,0,0,.3);
+    box-shadow: 0 0 5px 3px rgba(0,0,0,.1);
+} */
+
+.CodeMirror-empty.CodeMirror-focused {
+	outline: none;
+}
+
+.CodeMirror pre.CodeMirror-placeholder {
+	color: #999;
+}
+
+.CodeMirror-scroll {
+	min-height: 300px;
+	max-height: -webkit-fill-available;
+}

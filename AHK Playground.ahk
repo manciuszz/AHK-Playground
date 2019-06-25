@@ -33,6 +33,7 @@ javascript(ByRef req, ByRef res) {
 		return notFound(req, res)
 		
 	js := cache(req.queries.path, Func("_FileRead").Bind(req.queries.path))
+	res.headers["Content-Type"] := "text/javascript"
     res.SetBodyText(js)
     res.status := 200
 }
@@ -97,7 +98,7 @@ mountHTML(pos := 1) {
 	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #JustCompile directive"
 	elementsToBind.outputPlaceholder := " ... "
 	
-	HTML := _FileRead("/index.html")
+	HTML := _FileRead("/ui/index.html")
 	while ( pos := RegExMatch(HTML, "O){{(.*)}}", foundMatch, pos + StrLen(foundMatch.1)) ) {
 		bindings := StrSplit(foundMatch.1, "+")
 				

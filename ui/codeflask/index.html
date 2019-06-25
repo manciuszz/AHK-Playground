@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang='en'>
+	<head>
+		<meta charset='utf-8'>
+		<title>{{title}}</title>
+		
+		<script defer src='/javascript?path=/ui/main.js'></script>
+		
+		<script src="//unpkg.com/codeflask/build/codeflask.min.js"></script>
+		<script src="//unpkg.com/prismjs/components/prism-autohotkey.min.js"></script>
+		<link rel='stylesheet' href='/css?path=/ui/styles.css' />
+	</head>
+	<body>
+		<h2>{{title}}</h2>
+		<div class='row'>
+		  <div class='column left'>
+			<h2 class='center'>Input</h2>
+			<div id='codeArea' placeholder='{{inputPlaceholder}}' autofocus></div>
+		  </div>
+		  <div class='column right'>
+			<h2 class='center'>Output</h2>
+			<p id='output' class='word-wrap' data-placeholder=' > {{outputPlaceholder}}'></p>
+		  </div>
+		</div>
+		<div class='center btn'>
+			<button id='runScript' type='submit' onClick='handleClick();'>Run</button><b> or CTRL + ENTER</b>
+		</div>
+	</body>
+	<script>
+		var flask = new CodeFlask('#codeArea', {
+		  language: 'autohotkey',
+		  lineNumbers: true,
+		  defaultTheme: false,
+		  handleNewLineIndentation: false
+		});
+	</script>
+	 <link rel='stylesheet' href='/css?path=/ui/autohotkey.css' /> <!-- Stupid 'CodeFlask' creates its own stylesheet and messes up the order if this is inside a header  -->
+</html>

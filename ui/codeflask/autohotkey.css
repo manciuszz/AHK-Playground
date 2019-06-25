@@ -1,0 +1,210 @@
+#codeArea {
+	display: flex;
+	height: auto;
+	min-height: 30vh;
+	max-height: 80vh;
+	max-width: 75vw;
+	line-height: 0;
+}
+
+.codeflask {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+	height: auto;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+	color: #ccc;
+	background: none;
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	#font-size: 1em;
+	font-weight: 700;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	#line-height: 1.5;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+	#padding: 1em;
+	margin: .5em 0;
+	overflow: unset;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+	/* position: absolute; */
+	top: -100%;
+}
+
+@-moz-document url-prefix() { 
+  .classToApply{
+    border:1px solid red;
+    position:absolute;
+    right:0;
+    top:0;
+  }
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+.codeflask__textarea {
+	background: #2d2d2d;
+	border: none;
+	color: transparent;
+	z-index: 1;
+	resize: none;
+	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+	-webkit-appearance: pre;
+	caret-color: #fff;
+	z-index: 3;
+	width: 100%;
+	height: 100%;
+}
+
+.codeflask__flatten {
+    padding: 10px;
+    font-size: 13px;
+    line-height: 20px;
+    white-space: pre;
+    position: relative;
+    top: 0;
+    left: 0;
+    overflow: auto;
+    margin: 0 !important;
+    outline: none;
+    text-align: left;
+	z-index: 0;
+}
+
+.codeflask__code {
+	display: unset;
+	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+	overflow: hidden;
+}
+
+.codeflask--has-line-numbers .codeflask__flatten {
+    width: 100%;
+    left: 0;
+}
+
+.codeflask__lines {
+    padding: 10px 4px;
+    font-size: 12px;
+    line-height: 20px;
+    font-family: 'Cousine', monospace;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 40px;
+    height: 100%;
+    text-align: right;
+    color: #000;
+    z-index: 2;
+}
+
+.token.comment,
+.token.block-comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: #999;
+}
+
+.token.punctuation {
+	color: #ccc;
+}
+
+.token.tag,
+.token.attr-name,
+.token.namespace,
+.token.deleted {
+	color: #e2777a;
+}
+
+.token.function-name {
+	color: #6196cc;
+}
+
+.token.boolean,
+.token.number,
+.token.function {
+	color: #f08d49;
+}
+
+.token.property,
+.token.class-name,
+.token.constant,
+.token.symbol {
+	color: #f8c555;
+}
+
+.token.selector,
+.token.important,
+.token.atrule,
+.token.keyword,
+.token.builtin {
+	color: #cc99cd;
+}
+
+.token.string,
+.token.char,
+.token.attr-value,
+.token.regex,
+.token.variable {
+	color: #7ec699;
+}
+
+.token.operator,
+.token.entity,
+.token.url {
+	color: #67cdcc;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+
+.token.inserted {
+	color: green;
+}
