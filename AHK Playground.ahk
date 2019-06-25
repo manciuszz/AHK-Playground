@@ -28,22 +28,30 @@ notFound(ByRef req, ByRef res) {
 }
 
 @paths["/javascript"] := Func("javascript")
+@paths["/javascript/*"] := @paths["/javascript"]
 javascript(ByRef req, ByRef res) {
     if (!req.queries.path)
 		return notFound(req, res)
-		
+	
 	js := cache(req.queries.path, Func("_FileRead").Bind(req.queries.path))
+	if (!js)
+		return notFound(req, res)
+		
 	res.headers["Content-Type"] := "text/javascript"
     res.SetBodyText(js)
     res.status := 200
 }
 
 @paths["/css"] := Func("css")
+@paths["/css/*"] := @paths["/css"]
 css(ByRef req, ByRef res) {
 	if (!req.queries.path)
 		return notFound(req, res)
 	
 	css := cache(req.queries.path, Func("_FileRead").Bind(req.queries.path))
+	if (!css)
+		return notFound(req, res)
+		
     res.headers["Content-Type"] := "text/css"
     res.SetBodyText(css)
     res.status := 200
@@ -89,7 +97,7 @@ cache(key, value, shouldCache := false) {
 	return @cache[key]
 }
 
-mountHTML(pos := 1) {
+mountHTML(htmlEndpoint := "/ui/index.html", pos := 1) {
 	elementsToBind := {}
 	elementsToBind.title := "AHK Playground"
 	elementsToBind.inputPlaceholder := ""
@@ -98,7 +106,7 @@ mountHTML(pos := 1) {
 	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #JustCompile directive"
 	elementsToBind.outputPlaceholder := " ... "
 	
-	HTML := _FileRead("/ui/index.html")
+	HTML := _FileRead(htmlEndpoint)
 	while ( pos := RegExMatch(HTML, "O){{(.*)}}", foundMatch, pos + StrLen(foundMatch.1)) ) {
 		bindings := StrSplit(foundMatch.1, "+")
 				

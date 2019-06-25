@@ -76,14 +76,22 @@ class HttpServer
 
     Handle(ByRef request) {
         response := new HttpResponse()
-        if (!this.paths[request.path]) {
+				
+		restData := StrSplit(RegExReplace(request.path, "^(\/\w+\/)(.*)", "$1*|/$2"), "|")
+		if (restData.MaxIndex() > 1)
+			greedyPath := restData.1 
+	
+        if (!this.paths[request.path] && !this.paths[greedyPath]) {
             func := this.paths["404"]
             response.status := 404
             if (func)
                 func.(request, response, this)
             return response
-        } else {
-            this.paths[request.path].(request, response, this)
+        } else if (this.paths[request.path]) {
+			this.paths[request.path].(request, response, this)
+		} else if (this.paths[greedyPath]) {
+			request.queries.path := restData.2
+			this.paths[greedyPath].(request, response, this)
         }
         return response
     }
@@ -204,7 +212,6 @@ class HttpRequest
             pos := InStr(line, ":")
             key := SubStr(line, 1, pos - 1)
             val := Trim(SubStr(line, pos + 1), "`n`r ")
-
             this.headers[key] := val
         }
     }
