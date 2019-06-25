@@ -34,4 +34,4 @@ script := ""
 
 FileAppend, % script, % paths["created"]
 RunWait, % paths["compiler"] . paths["input"] . paths["output"]
-; FileDelete, % paths["created"]
+FileDelete, % paths["created"]
