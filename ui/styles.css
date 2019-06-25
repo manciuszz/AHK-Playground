@@ -19,7 +19,9 @@
 }
 
 .column {
+	display: flex;
 	flex: 50%;
+    flex-flow: column;
 }
 
 .left {
@@ -50,7 +52,7 @@ p:empty:not(:focus)::before {
 
 .CodeMirror {
 	/* border: 1px solid silver; */
-    height: auto;
+    height: 100%;
 	min-height: fit-content;
 	resize: both;
 	overflow: auto !important;
@@ -83,5 +85,5 @@ p:empty:not(:focus)::before {
 
 .CodeMirror-scroll {
 	min-height: 300px;
-	max-height: -webkit-fill-available;
+	max-height: 80vh;
 }
