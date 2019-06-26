@@ -65,9 +65,12 @@ class HttpServer
         f := FileOpen(file, "r")
         length := f.RawRead(data, f.Length)
         f.Close()
+		
+		if (!IsObject(f))
+			return response.headers["Content-Type"] := ""
 
         response.SetBody(data, length)
-        res.headers["Content-Type"] := this.GetMimeType(file)
+        response.headers["Content-Type"] := this.GetMimeType(file)
     }
 
     SetPaths(paths) {

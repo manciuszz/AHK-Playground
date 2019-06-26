@@ -4,11 +4,11 @@
 		<meta charset='utf-8'>
 		<title>{{title}}</title>
 		
-		<script defer src='/javascript?path=/ui/main.js'></script>
+		<script defer src='/asset/static/main.js'></script>
 		
-		<script src="//unpkg.com/codeflask/build/codeflask.min.js"></script>
-		<script src="//unpkg.com/prismjs/components/prism-autohotkey.min.js"></script>
-		<link rel='stylesheet' href='/css?path=/ui/styles.css' />
+		<script src="https://unpkg.com/codeflask/build/codeflask.min.js"></script>
+		<script src="https://unpkg.com/prismjs/components/prism-autohotkey.min.js"></script>
+		<link rel='stylesheet' href='/asset/static/styles.css' />
 	</head>
 	<body>
 		<h2>{{title}}</h2>
@@ -34,5 +34,5 @@
 		  handleNewLineIndentation: false
 		});
 	</script>
-	 <link rel='stylesheet' href='/css?path=/ui/autohotkey.css' /> <!-- Stupid 'CodeFlask' creates its own stylesheet and messes up the order if this is inside a header  -->
+	 <link rel='stylesheet' href='/asset/static/autohotkey.css' /> <!-- Stupid 'CodeFlask' creates its own stylesheet and messes up the order if this is inside a header  -->
 </html>

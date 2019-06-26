@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang='en'>
+	<head>
+		<meta charset='utf-8'>
+		<title>{{title}}</title>
+		
+		<script defer src='/asset/static/main.js'></script>
+		
+		<script src='https://unpkg.com/codemirror@5.48.0/lib/codemirror.js'></script>
+		<script src='https://unpkg.com/codemirror@5.48.0/mode/javascript/javascript.js'></script>
+		<script src='https://unpkg.com/codemirror@5.48.0/addon/display/placeholder.js'></script>
+		<script src='https://unpkg.com/codemirror@5.48.0/addon/scroll/simplescrollbars.js'></script>
+
+		<link rel='stylesheet' href='https://unpkg.com/codemirror@5.48.0/lib/codemirror.css'>
+		<link rel='stylesheet' href='https://unpkg.com/codemirror@5.48.0/theme/mbo.css'> <!-- More 'Themes' can be found here https://codemirror.net/demo/theme.html -->
+		<link rel='stylesheet' href='https://unpkg.com/codemirror@5.48.0/addon/scroll/simplescrollbars.css'>
+		<link rel='stylesheet' href='/asset/static/styles.css'>
+	</head>
+	<body>
+		<div class="container">
+			<h2>{{title}}</h2>
+			<div class='row'>
+			  <div class='column left'>
+				<h2 class='center'>Input</h2>
+				<textarea id='input' placeholder='{{inputPlaceholder}}'></textarea>
+			  </div>
+			  <div class='column right'>
+				<h2 class='center'>Output</h2>
+				<p id='output' class='word-wrap' data-placeholder=' > {{outputPlaceholder}}'></p>
+			  </div>
+			</div>
+			<div class='row row--notop'>
+				<p class='btn'>
+					<button id='runScript' type='submit' onClick='handleClick();'>Run</button><b> or CTRL + ENTER</b>
+				</p>
+			</div>
+		</div>
+		<script>
+			var editor = document.getElementById('input');
+			var edit = CodeMirror.fromTextArea(editor, {
+				autofocus: true,
+				lineNumbers: true,
+				theme: 'mbo',
+				mode: 'javascript',
+				scrollbarStyle: 'overlay'
+			});
+
+			// Ctrl+D - To Duplicate Code and Ctrl+(Down Arrow) to Delete current line of code
+			CodeMirror.keyMap.pcDefault["Ctrl-Down"] = "deleteLine";
+			CodeMirror.keyMap.pcDefault["Ctrl-D"] = function(cm){
+				let current_cursor = cm.doc.getCursor();
+				let line_content = cm.doc.getLine(current_cursor.line);
+
+				CodeMirror.commands.goLineEnd(cm);
+				CodeMirror.commands.newlineAndIndent(cm);
+
+				cm.doc.replaceSelection(line_content);
+				cm.doc.setCursor(current_cursor.line + 1, current_cursor.ch);
+			};
+		</script>
+	</body>
+</html>

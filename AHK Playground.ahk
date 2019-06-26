@@ -10,7 +10,7 @@ SetBatchLines, -1
 @paths := {}
 
 server := new HttpServer()
-server.LoadMimes(A_ScriptDir . "/mime.types")
+server.LoadMimes(A_ScriptDir . "/static/mime.types")
 server.SetPaths(@paths)
 server.Serve(8000)
 ; Run % "http://localhost:8000"
@@ -28,33 +28,12 @@ notFound(ByRef req, ByRef res) {
 	res.status := 404
 }
 
-@paths["/javascript"] := Func("javascript")
-@paths["/javascript/*"] := @paths["/javascript"]
-javascript(ByRef req, ByRef res) {
-    if (!req.queries.path)
+@paths["/asset/*"] := Func("asset")
+asset(ByRef req, ByRef res, ByRef server) {
+    server.ServeFile(res, A_ScriptDir . req.queries.path)
+	if (!res.headers["Content-Type"])
 		return notFound(req, res)
-	
-	js := cache(req.queries.path, Func("_FileRead").Bind(req.queries.path))
-	if (!js)
-		return notFound(req, res)
-		
-	res.headers["Content-Type"] := "text/javascript"
-    res.SetBodyText(js)
-    res.status := 200
-}
-
-@paths["/css"] := Func("css")
-@paths["/css/*"] := @paths["/css"]
-css(ByRef req, ByRef res) {
-	if (!req.queries.path)
-		return notFound(req, res)
-	
-	css := cache(req.queries.path, Func("_FileRead").Bind(req.queries.path))
-	if (!css)
-		return notFound(req, res)
-		
-    res.headers["Content-Type"] := "text/css"
-    res.SetBodyText(css)
+	res.headers["Cache-Control"] := "max-age=3600"
     res.status := 200
 }
 
@@ -82,7 +61,7 @@ _FileRead(path) {
 }
 
 @cache := {}
-cache(key, value, shouldCache := false) {
+cache(key, value, shouldCache := false) { ; Enables RAM type caching strategy.
 	global @cache
 			
 	if (IsObject(value))
@@ -98,7 +77,7 @@ cache(key, value, shouldCache := false) {
 	return @cache[key]
 }
 
-mountHTML(htmlEndpoint := "/ui/index.html", pos := 1) {
+mountHTML(htmlEndpoint := "/static/index.html", pos := 1) {
 	elementsToBind := {}
 	elementsToBind.title := "AHK Playground"
 	elementsToBind.inputPlaceholder := "CheatSheet:"
@@ -117,7 +96,7 @@ mountHTML(htmlEndpoint := "/ui/index.html", pos := 1) {
 	. "`n" "Ctrl-Down `t`t`; Delete current line of code."
 	. "`n" "Ctrl-Enter `t`t`; Execute code."
 	
-	HTML := _FileRead(htmlEndpoint)
+	HTML := cache(htmlEndpoint, Func("_FileRead").Bind(htmlEndpoint))
 	while ( pos := RegExMatch(HTML, "O){{(.*)}}", foundMatch, pos + StrLen(foundMatch.1)) ) {
 		bindings := StrSplit(foundMatch.1, "+")
 				
