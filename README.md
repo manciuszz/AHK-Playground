@@ -1,4 +1,4 @@
 # AHK-Playground
 AutoHotkey REPL environment inside your web browser window.
 
-![Preview](../stable/media/preview.png?raw=true)
+![Preview](https://i.imgur.com/M6Gn1gw.png)

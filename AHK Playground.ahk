@@ -8,9 +8,10 @@ SetBatchLines, -1
 #include <AhkDllThread>
 
 @paths := {}
+@ahkDll := _RelativePath("\lib\AutoHotkey.dll")
 
 server := new HttpServer()
-server.LoadMimes(A_ScriptDir . "/static/mime.types")
+server.LoadMimes(_RelativePath("/static/mime.types"))
 server.SetPaths(@paths)
 server.Serve(8000)
 ; Run % "http://localhost:8000"
@@ -30,7 +31,7 @@ notFound(ByRef req, ByRef res) {
 
 @paths["/asset/*"] := Func("asset")
 asset(ByRef req, ByRef res, ByRef server) {
-    server.ServeFile(res, A_ScriptDir . req.queries.path)
+    server.ServeFile(res, _RelativePath(req.queries.path))
 	if (!res.headers["Content-Type"])
 		return notFound(req, res)
 	res.headers["Cache-Control"] := "max-age=3600"
@@ -56,8 +57,12 @@ compiler(ByRef req, ByRef res) {
 }
 
 _FileRead(path) {
-	FileRead, output, % A_ScriptDir . path
+	FileRead, output, % _RelativePath(path)
 	return output
+}
+
+_RelativePath(path) {
+	return A_ScriptDir . path
 }
 
 @cache := {}
@@ -112,9 +117,10 @@ mountHTML(htmlEndpoint := "/static/index.html", pos := 1) {
 }
 
 builtInFunctions_DLL() {
+	global @ahkDll
 	funcs = 
 	( LTrim Join`n
-		A_AhkDll := A_ScriptDir . "\lib\AutoHotkey.dll"
+		A_AhkDll := "%@ahkDll%"
 		global __stdOutput := ""
 		print(msg) {
 			__stdOutput .= (msg . "``n")
@@ -143,9 +149,10 @@ execScript(Script, Wait := true) {
 }
 
 execScriptWithDLL(Script, Wait) {
+	global @ahkDll
 	static dllModule := false
 	if (!dllModule)
-		dllModule := AhkDllThread(A_ScriptDir . "\lib\AutoHotkey.dll")
+		dllModule := AhkDllThread(@ahkDll)
 	
 	; Note: Wait=2 means add code, execute and return immediately (don't wait for code to end execution). 
 	;       Wait=1 means add code, execute and wait for return.
