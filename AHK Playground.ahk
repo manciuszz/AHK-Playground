@@ -5,6 +5,7 @@
 SetBatchLines, -1
 
 #include <AHKhttp>
+#include <AhkDllThread>
 
 @paths := {}
 
@@ -101,9 +102,10 @@ mountHTML(htmlEndpoint := "/ui/index.html", pos := 1) {
 	elementsToBind := {}
 	elementsToBind.title := "AHK Playground"
 	elementsToBind.inputPlaceholder := ""
-	. ""   "#JustCompile `t`t`; Make the compiler not wait for Std output."
+	. ""   "#useCOM `t`t`; Execute code via COM Interface instead of AutoHotkey.DLL"
+	. "`n" "#NoOutput `t`t`; Don&#39;t wait for Std output."
 	. "`n" "MsgBox, Hello World `t`; Output ""Hello World"" inside a message box"
-	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #JustCompile directive"
+	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #NoOutput directive"
 	elementsToBind.outputPlaceholder := " ... "
 	
 	HTML := _FileRead(htmlEndpoint)
@@ -121,17 +123,28 @@ mountHTML(htmlEndpoint := "/ui/index.html", pos := 1) {
     return HTML
 }
 
-builtInFunctions() {
+builtInFunctions_DLL() {
 	funcs = 
 	( LTrim Join`n
+		global __stdOutput := ""
 		print(msg) {
-			FileAppend `% (msg . "``n"), *
+			__stdOutput .= msg . "``n"
 		}
 	)
 	return funcs
 }
 
-execScript(Script, Wait := true) {
+builtInFunctions_STDOUT() {
+	funcs = 
+	( LTrim Join`n
+		print(msg) {
+			FileAppend, `% msg . "``n", *
+		}
+	)
+	return funcs
+}
+
+execScript(Script, Wait := true) { ; Replace with AHK.DLL
     shell := ComObjCreate("WScript.Shell")
     exec := shell.Exec(A_AhkPath . " /ErrorStdOut *")
     exec.StdIn.Write(script)
@@ -140,15 +153,37 @@ execScript(Script, Wait := true) {
         return exec.StdOut.ReadAll()
 }
 
+execScriptWithDLL(Script, Wait) {
+	static dllModule := false
+	if (!dllModule)
+		dllModule := AhkDllThread(A_ScriptDir . "\lib\AutoHotkey.dll")
+	
+	Wait := (!Wait ? 2 : 1)
+	
+	hThread := dllModule.ahktextdll("", "", "")
+	linePtr := dllModule.addScript(Script, Wait)
+	if (Wait)
+		return dllModule.ahkgetvar("__stdOutput")
+}
+
 runCode(injectedCode) {	
-	injectedCode := StrReplace(injectedCode, "#JustCompile", "", justCompile, 1) ; Creating a directive '#JustCompile' to make the compiler not wait for response.
+	injectedCode := StrReplace(injectedCode, "#useCOM", "", useCOM, 1) ; Creating a directive '#useCOM' to use AHK DLL code execution method.
+	injectedCode := StrReplace(injectedCode, "#NoOutput", "", justCompile, 1) ; Creating a directive '#NoOutput' to not wait for response from prints.
 	; injectedCode := StrReplace(injectedCode, "//", " `;") ; Allow JavaScript style comments
 
-	builtInFuncs := builtInFunctions()
+	if (!useCOM) {
+		builtInFuncs := builtInFunctions_DLL()
+		execFunc := Func("execScriptWithDLL")
+	} else {
+		builtInFuncs := builtInFunctions_STDOUT()
+		execFunc := Func("execScript")
+	}
+	
     runnableScript =
     (LTrim Join`n
         ;[Directives] {
 			#NoEnv
+			#NoTrayIcon
 			#SingleInstance Force
 			#Warn All, StdOut
 			; --
@@ -163,13 +198,12 @@ runCode(injectedCode) {
 		;}
 		
 		;[Body] {
+			print(" > Using " . (!%useCOM% ? "AutoHotkey.DLL" : "COM Interface"))
 			%injectedCode%
 		;}
     )
-	
-    output := execScript(runnableScript, !justCompile)
-	; if (!output)
-		; output := ExecScript("FileAppend % (" . injectedCode . "), *")
+		
+    output := execFunc.Call(runnableScript, !justCompile)
 	return output
 }
 
