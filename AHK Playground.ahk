@@ -107,7 +107,7 @@ mountHTML(htmlEndpoint := "/ui/index.html", pos := 1) {
 	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #NoOutput directive."
 	. "`n" "MsgBox, Hello World `t`; Output ""Hello World"" inside a message box."
 	. "`n"
-	. "`n" "AutoHotkey.DLL Specifics:"
+	. "`n" "AutoHotkey.DLL Specifics (https://hotkeyit.github.io/v2/docs):"
 	. "`n" "dllModule := AhkDllThread(A_AhkDll) `; Import module"
 	. "`n" "dllModule.ahktextdll(""MsgBox, Hello World"", """", """") `; Create new thread and execute "
 	. "`n" "dllModule.addScript(""MsgBox, Hello World"", executionMethod := 2) `; Execute code and return line pointer"

@@ -1,89 +1,69 @@
-.center {
-	margin: 0;
-	padding: 15px;
-	text-align: center;
+.container .row {
+  display: flex;
+  border: 1px solid black;
 }
-
-.column > h2 {
-	border-bottom: 1px solid black;
+.container .row .left {
+  width: 75%;
+  background-color: #aaa;
+  border-right: 1px solid black;
 }
-
-.btn {
-	padding: 15px 0 15px 0;
-	border: 1px solid black;
-	border-top: 0;
+.container .row .right {
+  width: 25%;
+  background-color: #bbb;
 }
-
-.row {
-	display: flex;
+.container .row .btn {
+  margin: 0;
+  padding: 15px;
+  text-align: center;
+  margin: 0 auto;
 }
-
-.column {
-	display: flex;
-	flex: 50%;
-    flex-flow: column;
+.container .row--notop {
+  border-top: 0px;
 }
-
-.left {
-	width: 75%;
-	background-color: #aaa;
-	border-right: 1px solid black;
+.container .column {
+  display: flex;
+  flex: 50%;
+  flex-flow: column;
 }
-
-.right {
-	width: 25%;
-	background-color:#bbb;
+.container .column h2 {
+  margin: 0;
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px solid black;
 }
-
-.word-wrap {
-	word-break: break-word;
-	white-space: pre-wrap;
+.container .column #output {
+  margin: 0px;
+  padding: 5px;
+  background-color: whitesmoke;
+  max-height: 79vh;
+  overflow: scroll;
 }
-
-#output {
-    margin: 0;
-	padding: 5px;
-	background-color: whitesmoke;
+.container .word-wrap {
+  word-break: break-word;
+  white-space: pre-wrap;
 }
-
-p:empty:not(:focus)::before {
-	content: attr(data-placeholder);
+.container #output {
+  padding: 5px;
+  background-color: whitesmoke;
 }
-
+.container p:empty:not(:focus)::before {
+  content: attr(data-placeholder);
+}
+.container ::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
 .CodeMirror {
 	/* border: 1px solid silver; */
     height: 100%;
-	min-height: fit-content;
-	resize: both;
-	overflow: auto !important;
-	overflow-y: overlay;
-	min-width: -webkit-fill-available;
-	max-width: -webkit-fill-available;
-	max-height: 80vh;
 }
-
-::-webkit-scrollbar {
-	width: 0px;
-	height: 0px;
-}
-
-/* .CodeMirror::-webkit-resizer{ 
-    border : 9px solid rgba(0,0,0,.1);
-    border-bottom-color: rgba(0,0,0,.5);
-    border-right-color: rgba(0,0,0,.5);
-    outline: 1px solid rgba(0,0,0,.3);
-    box-shadow: 0 0 5px 3px rgba(0,0,0,.1);
-} */
-
-.CodeMirror-empty.CodeMirror-focused {
-	outline: none;
-}
-
-.CodeMirror pre.CodeMirror-placeholder {
-	color: #999;
-}
-
 .CodeMirror-scroll {
 	min-height: 300px;
 	max-height: 80vh;
+}
+.CodeMirror-empty.CodeMirror-focused {
+	outline: none;
+}
+.CodeMirror pre.CodeMirror-placeholder {
+	color: #999;
 }
