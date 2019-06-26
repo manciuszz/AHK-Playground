@@ -107,11 +107,15 @@ mountHTML(htmlEndpoint := "/ui/index.html", pos := 1) {
 	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #NoOutput directive."
 	. "`n" "MsgBox, Hello World `t`; Output ""Hello World"" inside a message box."
 	. "`n"
-	. "`n" "Useful Editor shortcuts:"
+	. "`n" "AutoHotkey.DLL Specifics:"
+	. "`n" "dllModule := AhkDllThread(A_AhkDll) `; Import module"
+	. "`n" "dllModule.ahktextdll(""MsgBox, Hello World"", """", """") `; Create new thread and execute "
+	. "`n" "dllModule.addScript(""MsgBox, Hello World"", executionMethod := 2) `; Execute code and return line pointer"
+	
+	elementsToBind.outputPlaceholder := "Useful Editor shortcuts:"
 	. "`n" "Ctrl-D `t`t`t`; Duplicate current line of code."
 	. "`n" "Ctrl-Down `t`t`; Delete current line of code."
 	. "`n" "Ctrl-Enter `t`t`; Execute code."
-	elementsToBind.outputPlaceholder := " ... "
 	
 	HTML := _FileRead(htmlEndpoint)
 	while ( pos := RegExMatch(HTML, "O){{(.*)}}", foundMatch, pos + StrLen(foundMatch.1)) ) {
@@ -131,6 +135,7 @@ mountHTML(htmlEndpoint := "/ui/index.html", pos := 1) {
 builtInFunctions_DLL() {
 	funcs = 
 	( LTrim Join`n
+		A_AhkDll := A_ScriptDir . "\lib\AutoHotkey.dll"
 		global __stdOutput := ""
 		print(msg) {
 			__stdOutput .= (msg . "``n")
@@ -149,7 +154,7 @@ builtInFunctions_STDOUT() {
 	return funcs
 }
 
-execScript(Script, Wait := true) { ; Replace with AHK.DLL
+execScript(Script, Wait := true) {
     shell := ComObjCreate("WScript.Shell")
     exec := shell.Exec(A_AhkPath . " /ErrorStdOut *")
     exec.StdIn.Write(script)
@@ -163,11 +168,14 @@ execScriptWithDLL(Script, Wait) {
 	if (!dllModule)
 		dllModule := AhkDllThread(A_ScriptDir . "\lib\AutoHotkey.dll")
 	
+	; Note: Wait=2 means add code, execute and return immediately (don't wait for code to end execution). 
+	;       Wait=1 means add code, execute and wait for return.
+	;       Wait=0 means add code but do not execute.
 	Wait := (!Wait ? 2 : 1)
 	
 	hThread := dllModule.ahktextdll("", "", "")
 	linePtr := dllModule.addScript(Script, Wait)
-	if (Wait)
+	if (Wait=1)
 		return dllModule.ahkgetvar("__stdOutput")
 }
 
@@ -197,7 +205,7 @@ runCode(injectedCode) {
 			SetWorkingDir %A_ScriptDir%
 			; --
         ;}		
-		
+				
 		;[Built-In Functions] {
 			%builtInFuncs%
 		;}
