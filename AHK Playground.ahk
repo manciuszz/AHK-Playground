@@ -101,11 +101,16 @@ cache(key, value, shouldCache := false) {
 mountHTML(htmlEndpoint := "/ui/index.html", pos := 1) {
 	elementsToBind := {}
 	elementsToBind.title := "AHK Playground"
-	elementsToBind.inputPlaceholder := ""
-	. ""   "#useCOM `t`t`; Execute code via COM Interface instead of AutoHotkey.DLL"
+	elementsToBind.inputPlaceholder := "CheatSheet:"
+	. "`n" "#useCOM `t`t`; Execute code via COM Interface instead of AutoHotkey.DLL"
 	. "`n" "#NoOutput `t`t`; Don&#39;t wait for Std output."
-	. "`n" "MsgBox, Hello World `t`; Output ""Hello World"" inside a message box"
-	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #NoOutput directive"
+	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #NoOutput directive."
+	. "`n" "MsgBox, Hello World `t`; Output ""Hello World"" inside a message box."
+	. "`n"
+	. "`n" "Useful Editor shortcuts:"
+	. "`n" "Ctrl-D `t`t`t`; Duplicate current line of code."
+	. "`n" "Ctrl-Down `t`t`; Delete current line of code."
+	. "`n" "Ctrl-Enter `t`t`; Execute code."
 	elementsToBind.outputPlaceholder := " ... "
 	
 	HTML := _FileRead(htmlEndpoint)
@@ -128,7 +133,7 @@ builtInFunctions_DLL() {
 	( LTrim Join`n
 		global __stdOutput := ""
 		print(msg) {
-			__stdOutput .= msg . "``n"
+			__stdOutput .= (msg . "``n")
 		}
 	)
 	return funcs
