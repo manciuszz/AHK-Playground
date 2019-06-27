@@ -35,28 +35,49 @@
 				</p>
 			</div>
 		</div>
-		<script>
+		<script>			
 			var editor = document.getElementById('input');
 			var edit = CodeMirror.fromTextArea(editor, {
 				autofocus: true,
 				lineNumbers: true,
 				theme: 'mbo',
 				mode: 'javascript',
-				scrollbarStyle: 'overlay'
+				scrollbarStyle: 'overlay',
+				extraKeys: {
+					"Ctrl-Down": "deleteLine",
+					"Ctrl-Q": function(cm) {
+						let commentToken = ";"; // AutoHotkey specific comment token
+						let commentBlankLines = false;
+						
+						let selection = cm.doc.listSelections()[0];
+						let position = selection.anchor.line < selection.head.line ? ["anchor", "head"] : ["head", "anchor"];
+						cm.doc.eachLine(selection[position[0]].line, selection[position[1]].line + 1, function(line) {
+							let lineText = line.text;
+							let tokenPosition = lineText.indexOf(commentToken);
+							if (tokenPosition == -1 && (commentBlankLines || lineText != "")) {
+								cm.doc.setCursor(line.lineNo());
+								CodeMirror.commands.goLineStart(cm);
+								cm.doc.replaceSelection(commentToken + " ");
+							} else {
+								let lineNr = line.lineNo();
+								let foundTokenAtPos = lineText[tokenPosition + commentToken.length];
+								cm.doc.setSelection({line: lineNr, ch: tokenPosition}, {line: lineNr, ch: tokenPosition + commentToken.length + (/\s/.test(foundTokenAtPos) ? foundTokenAtPos.length : 0)}); 
+								cm.doc.replaceSelection("");
+							}
+						});
+					},
+					"Ctrl-D": function(cm){
+						let current_cursor = cm.doc.getCursor();
+						let line_content = cm.doc.getLine(current_cursor.line);
+
+						CodeMirror.commands.goLineEnd(cm);
+						CodeMirror.commands.newlineAndIndent(cm);
+
+						cm.doc.replaceSelection(line_content);
+						cm.doc.setCursor(current_cursor.line + 1, current_cursor.ch);
+					}
+				},
 			});
-
-			// Ctrl+D - To Duplicate Code and Ctrl+(Down Arrow) to Delete current line of code
-			CodeMirror.keyMap.pcDefault["Ctrl-Down"] = "deleteLine";
-			CodeMirror.keyMap.pcDefault["Ctrl-D"] = function(cm){
-				let current_cursor = cm.doc.getCursor();
-				let line_content = cm.doc.getLine(current_cursor.line);
-
-				CodeMirror.commands.goLineEnd(cm);
-				CodeMirror.commands.newlineAndIndent(cm);
-
-				cm.doc.replaceSelection(line_content);
-				cm.doc.setCursor(current_cursor.line + 1, current_cursor.ch);
-			};
 		</script>
 	</body>
 </html>

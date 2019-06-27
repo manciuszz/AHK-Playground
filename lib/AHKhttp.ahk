@@ -30,10 +30,15 @@ class HttpServer
     static servers := {}
 
     LoadMimes(file) {
-        if (!FileExist(file))
+		isPath := InStr(file, ":")
+        if (isPath && !FileExist(file))
             return false
 
-        FileRead, data, % file
+		if (isPath)
+			FileRead, data, % file
+		else
+			data := file
+		
         types := StrSplit(data, "`n")
         this.mimes := {}
         for i, data in types {
