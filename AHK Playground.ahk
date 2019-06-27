@@ -88,7 +88,7 @@ mountHTML(htmlEndpoint := "/static/index.html", pos := 1) {
 	elementsToBind.title := "AHK Playground"
 	elementsToBind.inputPlaceholder := "CheatSheet:"
 	. "`n" "#useCOM `t`t`; Execute code via COM Interface instead of AutoHotkey.DLL"
-	. "`n" "#noOutput `t`t`; Don&#39;t wait for Std output."
+	. "`n" "#NoOutput `t`t`; Don&#39;t wait for Std output."
 	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #NoOutput directive."
 	. "`n" "MsgBox, Hello World `t`; Output ""Hello World"" inside a message box."
 	. "`n"
@@ -159,7 +159,7 @@ builtInFunctions_DLL(importMethods := false) {
 	return funcs
 }
 
-builtInFunctions_STDOUT() {
+builtInFunctions_COM() {
 	funcs = 
 	( LTrim Join`n
 		print(msg) {
@@ -205,7 +205,7 @@ runCode(injectedCode) {
 		builtInFuncs := builtInFunctions_DLL(importMethods)
 		execFunc := Func("execScriptWithDLL")
 	} else {
-		builtInFuncs := builtInFunctions_STDOUT()
+		builtInFuncs := builtInFunctions_COM()
 		execFunc := Func("execScript")
 	}
 	

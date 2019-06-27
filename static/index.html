@@ -45,28 +45,40 @@
 				scrollbarStyle: 'overlay',
 				extraKeys: {
 					"Ctrl-Down": "deleteLine",
-					"Ctrl-Q": function(cm) {
-						let commentToken = ";"; // AutoHotkey specific comment token
-						let commentBlankLines = false;
+					"Ctrl-Q": (function() {
+						let options = {
+							commentToken: ";",
+							commentBlankLines: false
+						};
 						
-						let selection = cm.doc.listSelections()[0];
-						let position = selection.anchor.line < selection.head.line ? ["anchor", "head"] : ["head", "anchor"];
-						cm.doc.eachLine(selection[position[0]].line, selection[position[1]].line + 1, function(line) {
-							let lineText = line.text;
-							let tokenPosition = lineText.indexOf(commentToken);
-							if (tokenPosition == -1 && (commentBlankLines || lineText != "")) {
-								cm.doc.setCursor(line.lineNo());
-								CodeMirror.commands.goLineStart(cm);
-								cm.doc.replaceSelection(commentToken + " ");
-							} else {
-								let lineNr = line.lineNo();
-								let foundTokenAtPos = lineText[tokenPosition + commentToken.length];
-								cm.doc.setSelection({line: lineNr, ch: tokenPosition}, {line: lineNr, ch: tokenPosition + commentToken.length + (/\s/.test(foundTokenAtPos) ? foundTokenAtPos.length : 0)}); 
-								cm.doc.replaceSelection("");
-							}
-						});
-					},
-					"Ctrl-D": function(cm){
+						let comment = function(cm, lineNumber, tokenPosition, lineText, tokenPos = tokenPosition + options.commentToken.length) {
+							cm.doc.setSelection({line: lineNumber, ch: tokenPosition}, {line: lineNumber, ch: tokenPos + (/\s/.test(lineText[tokenPos]) ? lineText[tokenPos].length : 0)}); 
+							cm.doc.replaceSelection("");
+						};
+						
+						let uncomment = function(cm, lineNumber) {
+							cm.doc.setCursor(lineNumber);
+							cm.execCommand("goLineStart");
+							cm.doc.replaceSelection(options.commentToken + " ");
+						};
+						
+						return function(cm) {							
+							let selection = cm.doc.listSelections()[0];
+							let position = selection.anchor.line < selection.head.line ? ["anchor", "head"] : ["head", "anchor"];
+							cm.doc.eachLine(selection[position[0]].line, selection[position[1]].line + 1, function(line) {
+								let lineText = line.text;
+								let lineNumber = line.lineNo();
+								let tokenPosition = lineText.indexOf(options.commentToken);
+								
+								if (tokenPosition == 0) {
+									comment(cm, lineNumber, tokenPosition, lineText);
+								} else if (tokenPosition >= -1 && (options.commentBlankLines || lineText.trim() != "")) {
+									uncomment(cm, lineNumber);
+								}
+							});
+						}
+					})(),
+					"Ctrl-D": function(cm) {
 						let current_cursor = cm.doc.getCursor();
 						let line_content = cm.doc.getLine(current_cursor.line);
 
