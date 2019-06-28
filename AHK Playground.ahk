@@ -88,7 +88,8 @@ mountHTML(htmlEndpoint := "/static/index.html", pos := 1) {
 	elementsToBind.title := "AHK Playground"
 	elementsToBind.inputPlaceholder := "CheatSheet:"
 	. "`n" "#useCOM `t`t`; Execute code via COM Interface instead of AutoHotkey.DLL"
-	. "`n" "#NoOutput `t`t`; Don&#39;t wait for Std output."
+	. "`n" "#NoOutput `t`t`; Don&#39;t wait for printable output."
+	. "`n" "#EnableMsgBox `t`t`; Enable usage of MsgBox."
 	. "`n" "print(""Hello World"") `t`; Print ""Hello World"" to output window - if there&#39;s no #NoOutput directive."
 	. "`n" "MsgBox, Hello World `t`; Output ""Hello World"" inside a message box."
 	. "`n"
@@ -195,13 +196,18 @@ execScriptWithDLL(Script, Wait) {
 		return dllModule.ahkgetvar("__stdOutput")
 }
 
-runCode(injectedCode) {	
-	injectedCode := StrReplace(injectedCode, "#useCOM", "", useCOM, 1) ; Creating a directive '#useCOM' to use AHK DLL code execution method.
-	injectedCode := StrReplace(injectedCode, "#NoOutput", "", justCompile, 1) ; Creating a directive '#NoOutput' to not wait for response from prints.
-	; injectedCode := StrReplace(injectedCode, "//", " `;") ; Allow JavaScript style comments
+runCode(browserInputCode) {	
+	browserInputCode := StrReplace(browserInputCode, "#EnableMsgBox", "", enableMsgBox, 1) ; Creating a directive '#EnableMsgBox' to enable usage of MsgBox
+	if (!enableMsgBox)
+		browserInputCode := StrReplace(browserInputCode, "MsgBox", "OutputDebug") ; Disabling MsgBox built-in function by renaming it...
+	browserInputCode := StrReplace(browserInputCode, "#useCOM", "", useCOM, 1) ; Creating a directive '#useCOM' to use AHK DLL code execution method.
+	browserInputCode := StrReplace(browserInputCode, "#NoOutput", "", justCompile, 1) ; Creating a directive '#NoOutput' to not wait for response from prints.
+	; browserInputCode := StrReplace(browserInputCode, "//", " `;") ; Allow JavaScript style comments
 
+	; browserInputCode := RegExReplace(browserInputCode, "mJ)(*ANYCRLF)MsgBox(?:\W+(?<!""|\d|%)\d?(?<!""|%),?\s?,?\s?)(.*)(?<!\d)(?<!\s)(?<!,)", "FileAppend, $1, *")
+	
 	if (!useCOM) {
-		injectedCode := StrReplace(injectedCode, "#importMethods", "", importMethods, 1) ; Creating a directive '#importMethods' to import AHK.DLL method shortcuts
+		browserInputCode := StrReplace(browserInputCode, "#importMethods", "", importMethods, 1) ; Creating a directive '#importMethods' to import AHK.DLL method shortcuts
 		builtInFuncs := builtInFunctions_DLL(importMethods)
 		execFunc := Func("execScriptWithDLL")
 	} else {
@@ -229,7 +235,7 @@ runCode(injectedCode) {
 		
 		;[Body] {
 			print(" > Using " . (!%useCOM% ? "AutoHotkey.DLL" : "COM Interface"))
-			%injectedCode%
+			%browserInputCode%
 		;}
     )
 		
